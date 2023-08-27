@@ -256,6 +256,35 @@ def descargarReporteUsuarios(request):
     Tipo de usuarios que genera el reporte
     
     """
+    usuariosInformacion = User.objects.get()
     nombreArchivo = 'reporteUsuarios.pdf'
+    archivoPdf = canvas.Canvas(nombreArchivo, A4)
+
+    # Descripción de cabecera
+    archivoPdf.drawImage('./django_tareas/static/logoApp.png',20,700, width=140, height=80)
+    archivoPdf.drawImage('./django_tareas/static/logoPUCP.png',430,700, width=140, height=80)
+    archivoPdf.setFont('Helvetiva-Bold',12)
+    archivoPdf.drawCentredString(297.5, 730, 'Reporte de Usuarios')
+
+    # Información de los Usuarios
+    lista_x = [40,550]
+    lista_y = [500,540]
+    archivoPdf.setStrokeColorRGB(0,0,1)
+
+    for usuario in usuariosInformacion:
+        archivoPdf.grid(lista_x,lista_y)
+        archivoPdf.setFont('Helvetica',12)
+        datoUsuario = datosUsuario.objects.get(user = usuario)
+        cantidadTareas = tareasInformacion.objects.filter(usuarioRelacionado=usuario).count()
+        archivoPdf.drawString(lista_x[0] + 20, lista_y[1]-15, f'{usuario.first_name + "  " + usuario.last_name}')
+        archivoPdf.drawString(lista_x[0] + 120, lista_y[1]-25, f'{usuario.username}')
+        archivoPdf.drawString(lista_x[0] + 220, lista_y[1]-25, f'{datoUsuario.fechaIngreso}')
+        archivoPdf.drawString(lista_x[0] + 300, lista_y[1]-25, f'{datoUsuario.nroCelular}')
+        archivoPdf.drawString(lista_x[0] + 20, lista_y[1]-35, f'{cantidadTareas}')
+        archivoPdf.drawString(lista_x[0] + 120, lista_y[1]-35, f'{datoUsuario.tipoUsuario}')
+        lista_y[0] = lista_y[0] - 60
+        lista_y[1] = lista_y[1] - 60
+
+    archivoPdf.save()
     reporteUsuarios=open(nombreArchivo,'rb')
     return FileResponse(reporteUsuarios,as_attachment=True)
