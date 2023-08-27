@@ -288,3 +288,23 @@ def descargarReporteUsuarios(request):
     archivoPdf.save()
     reporteUsuarios=open(nombreArchivo,'rb')
     return FileResponse(reporteUsuarios,as_attachment=True)
+
+def consultarInfoUsuario(idUsuario):
+    usuarioInformacion = User.objects.get(id=idUsuario)
+    nombre = usuarioInformacion.first_name
+    apellido = usuarioInformacion.last_name
+    email = usuarioInformacion.email_user
+    datoUsuario = datosUsuario.objects.get(user=usuarioInformacion)
+    nroCelular = datoUsuario.nroCelular
+    profesion = datoUsuario.profesionUsuario
+    fechaIngreso = datoUsuario.fechaIngreso
+    return JsonResponse({
+        'nroCelular': nroCelular,
+        'profesionUsuario': profesion,
+        'nombre': nombre,
+        'apellido':apellido,
+        'email':email,
+        'fechaIngreso':fechaIngreso
+
+
+    })

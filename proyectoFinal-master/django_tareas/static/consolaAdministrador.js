@@ -1,6 +1,15 @@
+
 function editarUsuario(idEditar)
 {
+    
     console.log(idEditar)
+    fetch('/verUsuario/' + idEditar)
+    .then(response => response.json())
+    .then(
+        data => {
+            
+        }
+    )
     /*
     PREGUNTA 3
     Capturar informacion del usuario desde base de datos y llenar
@@ -31,4 +40,6 @@ function actualizarUsuario()
     H1 cuyo id es cargaId. Con los datos capturados postearlos en la base de datos
     y actualizar la informacion del usuario
     */
+   elementoSeleccionado = document.getElementById('cargaId')
+   idSeleccionado = elementoSeleccionado.id
 }
